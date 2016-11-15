@@ -1,6 +1,23 @@
 import React, {Component} from 'react';
 import {Link, browserHistory} from 'react-router';
-import {LoadMask, getJSON} from './Helpers';
+import {LoadMask, getJSON, postJSON} from './Helpers';
+
+const RoleView = React.createClass({
+    handleChange(e) {
+        postJSON('/api/group/' + this.props.row.group + '/change-role', {role_id: this.refs.role.value});
+    },
+    render() {
+        if (window.INITIAL_DATA.id === this.props.row.user.id) {
+            return (<select ref="role" className="form-control" onChange={this.handleChange} defaultValue={this.props.row.role}>
+                <option value="4">Any</option>
+                <option value="1">Damage Dealer</option>
+                <option value="2">Healer</option>
+                <option value="3">Tank</option>
+            </select>);
+        }
+        return (<span>{this.props.row.role_name}</span>);
+    }
+});
 
 class RosterTable extends Component {
     render() {
@@ -9,7 +26,7 @@ class RosterTable extends Component {
             return (
                 <tr key={row.id}>
                     <td>@{row.user.gameid}</td>
-                    <td>{row.role_name}</td>
+                    <td><RoleView row={row}/></td>
                     <td>{row.description}</td>
                     {needControl ?
                         <td><a href="javascript:void(0)" onClick={(e) => this.props.onMemberMove(row, e)} title="Move member"
@@ -76,6 +93,7 @@ const GroupRoster = React.createClass({
                 return el;
             })
         });
+        postJSON('/api/group/' + this.props.id + '/move-member', {member_id: row.user.id});
     },
     onMemberKick(row) {
         this.setState({
@@ -83,6 +101,7 @@ const GroupRoster = React.createClass({
                 return (row.id !== el.id);
             })
         });
+        postJSON('/api/group/' + this.props.id + '/kick-member', {member_id: row.user.id});
     },
     render() {
         if (this.state.data.length > 0) {
@@ -132,8 +151,25 @@ const GroupView = React.createClass({
         if (this.state.data.id) {
             return (
                 <div>
-                    <h2>Group #{this.props.params.id} | Leader: <span className="label label-info">@{this.state.data.leader.gameid}</span></h2>
+                    <h2>
+                        Group #{this.props.params.id}{' '}
+                        {this.getIsManaged() ?
+                            <Link title="Edit" to={'/group/' + this.props.params.id + '/edit'}><i className="fa fa-cog"
+                                                                                                  aria-hidden="true"></i></Link> : ''}
+                        {' '}| Leader: <span className="label label-info">@{this.state.data.leader.gameid}</span>
+                    </h2>
+                    {this.state.data.next_event ? <div className="panel panel-danger">
+                        <div className="panel-body">Next event: {this.state.data.next_event.time}</div>
+                    </div> : ''}
+                    <div>
+                        <Link className="btn btn-warning" to={'/group/' + this.props.params.id + '/event/create'}>Create Event</Link>
+                        {' '}
+                        <Link className="btn btn-info" to={'/group/' + this.props.params.id + '/event/list'}>Events list</Link>
+                    </div>
                     <GroupRoster id={this.props.params.id} managed={this.getIsManaged()}/>
+                    {this.state.data.description ? <div className="panel panel-warning">
+                        <div className="panel-body" dangerouslySetInnerHTML={{__html: this.state.data.description_md}}/>
+                    </div> : ''}
                 </div>
             )
         } else {

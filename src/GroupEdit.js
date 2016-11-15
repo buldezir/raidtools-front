@@ -61,8 +61,8 @@ let GroupEditForm = React.createClass({
             if (json.error) {
                 alert(json.error);
             } else {
-                console.log(json);
-                //window.INITIAL_DATA.groupList = null;
+                // console.log(json);
+                this.setState({data: json.data});
                 //browserHistory.push('/group/' + json.data.id);
             }
             return json;
@@ -89,7 +89,7 @@ let GroupEditForm = React.createClass({
                             Lock Main Roster
                         </Bootstrap.Col>
                         <Bootstrap.Col sm={9}>
-                            <select name="lock_ismain" id="lockismainedit" className="form-control" defaultValue={this.state.data.lock_ismain}>
+                            <select name="lock_ismain" id="lockismainedit" className="form-control" defaultValue={this.state.data.lock_ismain+0}>
                                 <option value="0">People will join Main roster if it has space (&lt;12)</option>
                                 <option value="1">Everybody will join to StandBy roster</option>
                             </select>
@@ -101,7 +101,7 @@ let GroupEditForm = React.createClass({
                             Invitation only
                         </Bootstrap.Col>
                         <Bootstrap.Col sm={9}>
-                            <Bootstrap.FormControl componentClass="select" name="invitational" defaultValue={this.state.data.invitational}>
+                            <Bootstrap.FormControl componentClass="select" name="invitational" defaultValue={this.state.data.invitational+0}>
                                 <option value="1">Only users with @accountid from Invitation list can join</option>
                                 <option value="0">Anyone can join</option>
                             </Bootstrap.FormControl>
@@ -131,6 +131,7 @@ let GroupEditForm = React.createClass({
                         </Bootstrap.Col>
                         <Bootstrap.Col sm={9}>
                             <Bootstrap.FormControl componentClass="textarea" name="description" rows="4" defaultValue={this.state.data.description}/>
+                            <Bootstrap.HelpBlock><a href="http://commonmark.org/help/" target="_blank">Markdown syntax available</a></Bootstrap.HelpBlock>
                         </Bootstrap.Col>
                     </Bootstrap.FormGroup>
 

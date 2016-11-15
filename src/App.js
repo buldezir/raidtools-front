@@ -6,6 +6,7 @@ import GroupEditForm from './GroupEdit';
 import NavUserIdForm from './MyUserid';
 import GroupList from './GroupList';
 import GroupView from './GroupView';
+import EventCreateForm from './EventCreate';
 import ApiTest from './ApiTest';
 import {PageNotFound} from './Helpers';
 import {NavIsAuthed, NavIsNotAuthed} from './TopNav';
@@ -56,6 +57,7 @@ class MainContent extends Component {
 let Layout = React.createClass({
 
     getInitialState() {
+
         // return {
         //     authed: window.INITIAL_DATA.authed,
         //     username: window.INITIAL_DATA.username,
@@ -100,11 +102,11 @@ let Layout = React.createClass({
                 <Bootstrap.Jumbotron>
                     {React.cloneElement(this.props.children, this.state)}
                 </Bootstrap.Jumbotron>
-                <ApiTest/>
+                {location.hostname === 'raidtools.buldezir.com' ? '' : <ApiTest/>}
                 <Bootstrap.Navbar fixedBottom>
                     <Bootstrap.Navbar.Text>
-                        Created by <Bootstrap.Navbar.Link href="https://www.facebook.com/buldezir"><i className="fa fa-facebook"></i> Alexandr
-                        Arutyunov</Bootstrap.Navbar.Link> &copy; 2016
+                        Created by <Bootstrap.Navbar.Link href="https://www.facebook.com/buldezir" target="_blank"><i className="fa fa-facebook"></i> Alexandr
+                        Arutyunov</Bootstrap.Navbar.Link> <Bootstrap.Navbar.Link href="https://vk.com/buldezir" target="_blank"><i className="fa fa-vk"></i></Bootstrap.Navbar.Link> &copy; {(new Date()).getFullYear()}
                     </Bootstrap.Navbar.Text>
                 </Bootstrap.Navbar>
             </div>
@@ -125,6 +127,7 @@ class App extends React.Component {
                             <IndexRoute component={GroupList}/>
                             <Route path="/group/:id" component={GroupView}/>
                             <Route path="/group/:id/edit" component={GroupEditForm}/>
+                            <Route path="/group/:id/event/create" component={EventCreateForm}/>
                         </Route>
                     </Route>
                     <Route path="*" component={PageNotFound}/>

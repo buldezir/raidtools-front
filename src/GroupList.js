@@ -62,7 +62,7 @@ const GroupList = React.createClass({
             return (
                 <LoadMask ref="mask" needLoad={true}>
                     <h2>No groups yet</h2>
-                    <p><Link to="/group-create">Create your own group</Link> or <Link to="/group-join">join existing</Link></p>
+                    <p><Link to="/group/create">Create your own group</Link> or <Link to="/group/join">join existing</Link></p>
                 </LoadMask>
             )
         }

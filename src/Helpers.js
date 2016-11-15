@@ -96,6 +96,7 @@ function fetchJSON(url, params, method) {
     return fetch(url, {
         method: method === 'GET' ? 'GET' : 'POST',
         body: data,
+        credentials: 'include',
         headers: {
             'X-HTTP-METHOD-OVERRIDE': method,
             'X-Requested-With': 'XMLHttpRequest'
